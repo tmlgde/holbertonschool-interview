@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 "Module qui determine si tous les coffres peuvent êtres ouverts ou non"
+
+
 def canUnlockAll(boxes):
     n = len(boxes)
     ouvert = [False] * n
