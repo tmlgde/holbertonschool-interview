@@ -2,6 +2,29 @@
 #include "lists.h"
 
 /**
+ * reverse_listint - Reverses a singly linked list in place
+ * @head: Pointer to the first node of the list
+ *
+ * Return: Pointer to the new first node
+ */
+listint_t *reverse_listint(listint_t *head)
+{
+	listint_t *prev;
+	listint_t *next;
+
+	prev = NULL;
+	while (head != NULL)
+	{
+		next = head->next;
+		head->next = prev;
+		prev = head;
+		head = next;
+	}
+
+	return (prev);
+}
+
+/**
  * is_palindrome - Checks if a singly linked list is a palindrome
  * @head: Pointer to the pointer to the first node of the list
  *
@@ -9,43 +32,37 @@
  */
 int is_palindrome(listint_t **head)
 {
-	listint_t *current;
-	int *tab;
-	size_t size, i;
+	listint_t *slow, *fast, *second, *p1, *p2;
+	int result;
 
-	if (head == NULL || *head == NULL)
+	if (head == NULL || *head == NULL || (*head)->next == NULL)
 		return (1);
 
-	size = 0;
-	current = *head;
-	while (current != NULL)
+	slow = *head;
+	fast = *head;
+	while (fast->next != NULL && fast->next->next != NULL)
 	{
-		current = current->next;
-		size++;
+		slow = slow->next;
+		fast = fast->next->next;
 	}
 
-	tab = malloc(sizeof(int) * size);
-	if (tab == NULL)
-		return (0);
+	second = reverse_listint(slow->next);
 
-	current = *head;
-	i = 0;
-	while (current != NULL)
+	result = 1;
+	p1 = *head;
+	p2 = second;
+	while (p2 != NULL)
 	{
-		tab[i] = current->n;
-		current = current->next;
-		i++;
-	}
-
-	for (i = 0; i < size / 2; i++)
-	{
-		if (tab[i] != tab[size - 1 - i])
+		if (p1->n != p2->n)
 		{
-			free(tab);
-			return (0);
+			result = 0;
+			break;
 		}
+		p1 = p1->next;
+		p2 = p2->next;
 	}
 
-	free(tab);
-	return (1);
+	slow->next = reverse_listint(second);
+
+	return (result);
 }
